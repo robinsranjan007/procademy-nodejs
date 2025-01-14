@@ -60,13 +60,23 @@ try
 const getMovieById =async (req,res)=>{
 try
 {
-  const movie= await Movie.find({_id:req.params?.id})
+  // const movie= await Movie.find({_id:req.params?.id})
+  const movie= await Movie.findById(req.params.id);
+
+  res.status(200).json({
+    status:"success",
+    data:{
+      movie:movie
+    }
+  })
 
 }
-
 catch(err)
 {
-
+  res.status(400).json({
+    status:"failed",
+    message:err.message
+  }) 
 }
 
 }
@@ -75,7 +85,29 @@ catch(err)
 
 
 
-const updateMovie =(req,res)=>{}
+const updateMovie =async (req,res)=>{
+
+  try{
+    movie = await Movie.findByIdAndUpdate(req.params.id,req.body,{new:true,runValidators:true});
+
+    res.status(200).json({
+      status:"success",
+      data:{
+        movie:movie
+      }
+    })
+  
+  }catch(err)
+  {
+    res.status(400).json({
+      status:"failed",
+      message:err.message
+    }) 
+}
+}
+
+
+
 const deleteMovie =(req,res)=>{}
  
 

@@ -24,8 +24,8 @@ router.route('/')
 
 router.route('/:id')
         .get(getMovieById)
-        .patch(updateMovie).
-         delete(deleteMovie)
+        .patch(updateMovie)
+        .delete(deleteMovie)
 
 
 module.exports=router
