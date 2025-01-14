@@ -1,0 +1,42 @@
+[
+    {
+        "name": "Robins",
+        "gender": "male",
+        "age": 45,
+        "isMarried": true,
+        "address": {
+            "city": "London",
+            "country": "India"
+        },
+        "order": [
+            {
+                "productId": 12345,
+                "name": "iPhone 10"
+            },
+            {
+                "productId": 3343,
+                "name": "Laptop"
+            }
+        ]
+    },
+    {
+        "name": "Mark",
+        "gender": "male",
+        "age": 35,
+        "isMarried": true,
+        "address": {
+            "city": "New York",
+            "country": "USA"
+        },
+        "order": [
+            {
+                "productId": 45678,
+                "name": "LG Smart TV"
+            },
+            {
+                "productId": 56789,
+                "name": "Tablet"
+            }
+        ]
+    }
+]
