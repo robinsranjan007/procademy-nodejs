@@ -108,7 +108,24 @@ const updateMovie =async (req,res)=>{
 
 
 
-const deleteMovie =(req,res)=>{}
+const deleteMovie =async(req,res)=>{
+  try {
+    movie = await Movie.findById(req.params.id);
+    res.status(204).json(
+      {
+        status:"sucess",
+        data:null
+      }
+    )
+    
+  } catch (error) {
+    res.status(400).json({
+      status:"failed",
+      message:error.message
+    }) 
+  }
+  
+}
  
 
   module.exports={
