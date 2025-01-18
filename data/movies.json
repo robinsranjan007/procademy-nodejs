@@ -1,3 +1,59 @@
-[{"id":1,"name":"The monkey and the king ","release_year":1998,"duration":80},{"id":3,"name":"naruto the road to ice world","release_year":2010,"duration":148},{"id":5,"name":"Naruto shippuden","release_year":2007,"duration":700},{"id":6},{"id":7,"name":"Naruto ice world","release_year":2007,"duration":700},{"id":8,"name":"Sasuke the last uchiha","release_year":2007,"duration":700}]
-
-
+[
+    {
+      "name": "Riddick",
+      "description": "Left for dead on a sun-scorched planet, Riddick finds himself up against an alien race of predators. Activating an emergency beacon alerts two ships: one carrying a new breed of mercenary, the other captained by a man from Riddick's past.",
+      "duration": 119,
+      "ratings": 6.8,
+      "totalRating": 329,
+      "releaseYear": 2013,
+      "releaseDate": 1378252800000,
+      "genres": ["Action", "Sci-Fi", "Thriller"],
+      "directors": ["David Twohy"],
+      "coverImage": "Riddick-2013.jpg",
+      "actors": ["Vin Diesel", "Karl Urban", "Katee Sackhoff"],
+      "price": 50
+    },
+    {
+      "name": "We're the Millers",
+      "description": "A veteran pot dealer creates a fake family as part of his plan to move a huge shipment of weed into the U.S. from Mexico.",
+      "duration": 110,
+      "ratings": 7.2,
+      "totalRating": 230,
+      "releaseYear": 2013,
+      "releaseDate": 1375488000000,
+      "genres": ["Comedy", "Crime"],
+      "directors": ["Rawson Marshall Thurber"],
+      "coverImage": "we-are-the-millers-2013.jpg",
+      "actors": ["Jason Sudeikis", "Jennifer Aniston", "Emma Roberts"],
+      "price": 47
+    },
+    {
+      "name": "Divergent",
+      "description": "Beatrice Prior, a teenager with a special mind, finds her life threatened when an authoritarian leader seeks to exterminate her kind in her effort to seize control of their divided society.",
+      "duration": 117,
+      "ratings": 6.4,
+      "totalRating": 164,
+      "releaseYear": 2014,
+      "releaseDate": 1395273600000,
+      "genres": ["Action", "Adventure", "Romance", "Sci-Fi"],
+      "directors": ["Neil Burger"],
+      "coverImage": "Divergent-2014.jpg",
+      "actors": ["Shailene Woodley", "Kate Winslet", "Zoe Kravitz"],
+      "price": 52
+    },
+    {
+      "name": "Elysium",
+      "description": "Set in the year 2154, where the very wealthy live on a man-made space station while the rest of the population resides on a ruined Earth, a man takes on a mission that could bring equality to the polarized worlds.",
+      "duration": 109,
+      "ratings": 7,
+      "totalRating": 436,
+      "releaseYear": 2013,
+      "releaseDate": 1375833600000,
+      "genres": ["Action", "Drama", "Sci-Fi", "Thriller"],
+      "directors": ["Neill Blomkamp"],
+      "coverImage": "Elysium-2013.jpg",
+      "actors": ["Matt Damon", "Jodie Foster", "Sharlto Copley"],
+      "price": 65
+    }
+  ]
+  

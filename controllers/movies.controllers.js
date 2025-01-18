@@ -33,8 +33,64 @@ const getallmovies =async (req,res)=>{
 try
 {
 
-  const movies=await Movie.find();
+// console.log(req.query) //give query paramets in object form
+// const exludeField=['sort','page','limit','field'];
 
+// const queryObj={...req.query}; 
+// exludeField.forEach((val)=>{
+//   delete queryObj[val]
+// })
+
+// console.log(req.query)
+
+let querystr=JSON.stringify(req.query)
+querystr=querystr.replace(/\b(gte|gt|lte|lt)\b/g,(match)=>{
+ return `$${match}`
+})
+
+const queryObj=JSON.parse(querystr)
+// console.log(queryObj);
+
+
+
+
+
+let query=  Movie.find(queryObj);
+
+//SORTING
+if(req.query.sort)
+  {
+    const sortBy = req.query.sort.split(',').join(' ')
+    
+   query= query.sort( sortBy);
+  }
+  else
+  {
+    query= query.sort( 'createdAt');
+
+  }
+
+  //LIMITING
+
+  if(req.query.fields)
+  {
+    // query.select('name duration price ratings')
+    const fields = req.query.fields.split(',').join(' ')
+    query=query.select(fields)
+    console.log(fields);
+  }else{
+    query=query.select('-__v')
+  }
+
+const movies = await query;
+
+  // const movies=await Movie.find()
+  //             .where('duration')
+  //             .gte(req.query.duration)
+  //             .where('ratings')
+  //             .gte(req.query.ratings)
+  //             .where('price')
+  //             .lte(req.query.price)
   res.status(200).json({
     status:"success",
     length:movies.length,
