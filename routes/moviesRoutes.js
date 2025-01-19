@@ -5,6 +5,7 @@ const  {
     postMovie,
     updateMovie,
     deleteMovie,
+    getHighestRated
 //     validateBody,
 // checkId
 }=require('../controllers/movies.controllers.js')
@@ -15,6 +16,9 @@ const router=express.Router()
 //it will only run when there is a param present in the route here :id
 
 // router.param('id', checkId)
+
+
+router.route('/highest-rated').get(getHighestRated)
 
 
 

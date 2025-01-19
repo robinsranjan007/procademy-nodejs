@@ -2,12 +2,19 @@
 const Movie = require('./../models/movieModel')
 
 
-
+const getHighestRated = (req, res ,next)=>{
+  req.query.limit = '5';
+  req.query.sort = '-ratings'
+  next()
+}
 //--------------------------------ROUTE HANDLER----------FOR DATABASE--------------------------------------------------------------------------------------------
 
 const postMovie=async (req,res)=>{
   try
   {
+
+   
+
     
     const movie=await Movie.create(req.body) 
 
@@ -80,6 +87,22 @@ if(req.query.sort)
     console.log(fields);
   }else{
     query=query.select('-__v')
+  }
+
+  //PAGINATION
+  const page = req.query.page *1|| 1;
+  const limit = req.query.limit*1 || 10;
+  //page 1:1-10; page 2 :11-20;page 3:21-30
+  const skip = (page-1)*limit;
+  query=query.skip(skip).limit(10);
+
+  if(req.query.page)
+  {
+    const moviesCount = Movie.countDocuments();
+    if(skip>=moviesCount)
+    {
+      throw new Error('This page is not found!')
+    }
   }
 
 const movies = await query;
@@ -190,6 +213,7 @@ const deleteMovie =async(req,res)=>{
     postMovie,
     updateMovie,
     deleteMovie,
+    getHighestRated
     // checkId,
     // validateBody
   }
