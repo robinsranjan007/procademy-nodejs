@@ -1,6 +1,6 @@
 // const fs = require("fs");
 const Movie = require('./../models/movieModel')
-
+const Apifeatures = require('./../utils/apiFeatures')
 
 const getHighestRated = (req, res ,next)=>{
   req.query.limit = '5';
@@ -13,7 +13,7 @@ const postMovie=async (req,res)=>{
   try
   {
 
-   
+   const feature = new Apifeatures(Movie.find(),req.query).filter().sort()
 
     
     const movie=await Movie.create(req.body) 
@@ -48,62 +48,48 @@ try
 //   delete queryObj[val]
 // })
 
-// console.log(req.query)
 
-let querystr=JSON.stringify(req.query)
-querystr=querystr.replace(/\b(gte|gt|lte|lt)\b/g,(match)=>{
- return `$${match}`
-})
-
-const queryObj=JSON.parse(querystr)
-// console.log(queryObj);
-
-
-
-
-
-let query=  Movie.find(queryObj);
 
 //SORTING
-if(req.query.sort)
-  {
-    const sortBy = req.query.sort.split(',').join(' ')
+// if(req.query.sort)
+//   {
+//     const sortBy = req.query.sort.split(',').join(' ')
     
-   query= query.sort( sortBy);
-  }
-  else
-  {
-    query= query.sort( 'createdAt');
+//    query= query.sort( sortBy);
+//   }
+//   else
+//   {
+//     query= query.sort( 'createdAt');
 
-  }
+//   }
 
   //LIMITING
 
-  if(req.query.fields)
-  {
-    // query.select('name duration price ratings')
-    const fields = req.query.fields.split(',').join(' ')
-    query=query.select(fields)
-    console.log(fields);
-  }else{
-    query=query.select('-__v')
-  }
+  // if(req.query.fields)
+  // {
+  //   // query.select('name duration price ratings')
+  //   const fields = req.query.fields.split(',').join(' ')
+  //   query=query.select(fields)
+  //   console.log(fields);
+  // }else{
+  //   query=query.select('-__v')
+  // }
 
   //PAGINATION
-  const page = req.query.page *1|| 1;
-  const limit = req.query.limit*1 || 10;
-  //page 1:1-10; page 2 :11-20;page 3:21-30
-  const skip = (page-1)*limit;
-  query=query.skip(skip).limit(10);
+  // const page = req.query.page *1|| 1;
+  // const limit = req.query.limit*1 || 10;
+  // //page 1:1-10; page 2 :11-20;page 3:21-30
+  // const skip = (page-1)*limit;
+  // query=query.skip(skip).limit(10);
 
-  if(req.query.page)
-  {
-    const moviesCount = Movie.countDocuments();
-    if(skip>=moviesCount)
-    {
-      throw new Error('This page is not found!')
-    }
-  }
+  // if(req.query.page)
+  // {
+  //   const moviesCount = Movie.countDocuments();
+  //   if(skip>=moviesCount)
+  //   {
+  //     throw new Error('This page is not found!')
+  //   }
+  // }
 
 const movies = await query;
 
