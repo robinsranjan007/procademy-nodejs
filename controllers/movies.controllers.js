@@ -1,105 +1,47 @@
 // const fs = require("fs");
+const Customerror = require('../utils/customeError');
 const Movie = require('./../models/movieModel')
 const Apifeatures = require('./../utils/apiFeatures')
+const asyncErrorHandler = require('./../utils/asynchandler')
 
 const getHighestRated = (req, res ,next)=>{
   req.query.limit = '5';
   req.query.sort = '-ratings'
   next()
 }
+
+
+
 //--------------------------------ROUTE HANDLER----------FOR DATABASE--------------------------------------------------------------------------------------------
 
-const postMovie=async (req,res)=>{
+const postMovie=asyncErrorHandler(async (req,res)=>{
   try
   {
 
-   const feature = new Apifeatures(Movie.find(),req.query).filter().sort()
+  const feature = new Apifeatures(Movie.find(),req.query).filter().sort().limitfields().paginate();
+  let movies= await  feature.query 
 
-    
     const movie=await Movie.create(req.body) 
 
     res.status(201).json(
       {
         status:'success',
         data:{
-          movie:movie
+          movies
         }
       }
     )
   }catch(err)
   {
-    res.status(400).json({
-      status:'fail',
-      message:err.message
-    })
+    const error = new Customerror(err.message,400)
+    next(error)
   }
   
-}
+})
 
 const getallmovies =async (req,res)=>{
 try
 {
-
-// console.log(req.query) //give query paramets in object form
-// const exludeField=['sort','page','limit','field'];
-
-// const queryObj={...req.query}; 
-// exludeField.forEach((val)=>{
-//   delete queryObj[val]
-// })
-
-
-
-//SORTING
-// if(req.query.sort)
-//   {
-//     const sortBy = req.query.sort.split(',').join(' ')
-    
-//    query= query.sort( sortBy);
-//   }
-//   else
-//   {
-//     query= query.sort( 'createdAt');
-
-//   }
-
-  //LIMITING
-
-  // if(req.query.fields)
-  // {
-  //   // query.select('name duration price ratings')
-  //   const fields = req.query.fields.split(',').join(' ')
-  //   query=query.select(fields)
-  //   console.log(fields);
-  // }else{
-  //   query=query.select('-__v')
-  // }
-
-  //PAGINATION
-  // const page = req.query.page *1|| 1;
-  // const limit = req.query.limit*1 || 10;
-  // //page 1:1-10; page 2 :11-20;page 3:21-30
-  // const skip = (page-1)*limit;
-  // query=query.skip(skip).limit(10);
-
-  // if(req.query.page)
-  // {
-  //   const moviesCount = Movie.countDocuments();
-  //   if(skip>=moviesCount)
-  //   {
-  //     throw new Error('This page is not found!')
-  //   }
-  // }
-
-const movies = await query;
-
-  // const movies=await Movie.find()
-  //             .where('duration')
-  //             .gte(req.query.duration)
-  //             .where('ratings')
-  //             .gte(req.query.ratings)
-  //             .where('price')
-  //             .lte(req.query.price)
   res.status(200).json({
     status:"success",
     length:movies.length,
@@ -193,13 +135,90 @@ const deleteMovie =async(req,res)=>{
 }
  
 
+
+const getMoviesStats = async (req,res)=>{
+  try{
+
+    const stats =await Movie.aggregate([
+      { $match:{ratings:{$gte:4.5}}},
+      {$group:{
+        _id:'$releaseYear',
+        avgRating:{$avg:'$ratings'},
+        avgPrice:{$avg:'$price'},
+        minPrice:{$min:'$price'},
+        maxPrice:{$max:'$price'},
+        totalPrice:{$sum:'$price'},
+        movieCount: {$sum:1}
+      }},
+      {$sort:{minPrice:1}},
+      { $match:{maxPrice:{$gte:60}}}
+    ]);
+    res.status(200).json(
+      {
+        count:stats.length,
+        status:"sucess",
+        data:stats
+      })
+
+  }
+  catch(err)
+  {
+    res.status(400).json({
+      status:"failed",
+      message:error.message
+    }) 
+  }
+}
+
+
+
+const getMoviesbyGenre =async (req,res)=>{
+try{
+
+const genre = req.paras.genres;
+
+const movies = await Movies.aggregate([
+  {$unwind:'$generes'},
+  {$group:{
+    _id:'$genres',
+    movieCount:{$sum:1},
+    movies:{$push:'$name'},
+  }},
+  {$addFields:{genres:"$_id"}},
+  {$project:{_id:0}},
+  {$sort:{movieCount:-1}},
+  {$limit: 6},
+  {$match:{genre:genre}}
+]);
+
+
+  res.status(200).json(
+    {
+      count:movies.length,
+      status:"sucess",
+      data:{
+        Movies:movies
+      }
+    })
+}
+catch(err)
+{
+  res.status(400).json({
+    status:"failed",
+    message:err.message
+  }) 
+}
+}
+
   module.exports={
     getallmovies,
     getMovieById,
     postMovie,
     updateMovie,
     deleteMovie,
-    getHighestRated
+    getHighestRated,
+    getMoviesStats,
+    getMoviesbyGenre
     // checkId,
     // validateBody
   }

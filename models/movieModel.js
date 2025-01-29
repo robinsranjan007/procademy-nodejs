@@ -1,7 +1,5 @@
 const mongoose = require('mongoose')
-
-
-
+const fs = require('fs')
 
 //this is the schema based on which we will create a model 
 const movieSchema = new mongoose.Schema({
@@ -10,8 +8,10 @@ const movieSchema = new mongoose.Schema({
       type:String,
       required:[true,'Name is required field'],
       unique:true,
+      trim:true,
+      maxlength:[100,'limit exceeded'],
+      minlenght:[4,"limit less"],
       trim:true
-  
     },
     description: {
       type:String,
@@ -28,6 +28,17 @@ const movieSchema = new mongoose.Schema({
     ratings:{
       type:Number,
       required:true,
+      min:[1,'minimum should be one'],
+       validate:{
+        validator:function(val)
+       {
+        if(val>=1 && val<=10)
+        {
+            return true
+        }
+       },
+      message:"rating should be more than 1 and below 10"
+      }
     },
     totalRating:{
       type:Number,
@@ -48,7 +59,10 @@ const movieSchema = new mongoose.Schema({
     },
     genres:{
       type:[String],
-      required:[true,'genres is required filed']
+      required:[true,'genres is required filed'],
+      enum:{values:["Action","adventure","sci-fi"],
+        message:"this genres doesnot exist "
+      }
     },
     directors:{
       type:[String],
@@ -65,10 +79,47 @@ const movieSchema = new mongoose.Schema({
     price:{
       type:Number,
       required:[true,'price is the required filed']
-    }
+    },
+    createdBy:{
+      type:String,
+      required:[true,'created by is the required filed']
+    } 
+  },{
+    toJSON:{virtuals:true},
+    toObject: {virtuals:true}
   })
   
   
+movieSchema.virtual('durationHrs').get(function (){
+  return this.duration / 60;
+
+})
+
+movieSchema.pre('save',function(next){
+  this.createdBy = 'Robins Ranjan'
+  next()
+})
+
+movieSchema.post('save',function(doc,next){
+  const cotent = `A new movie document with name ${doc.name} has been created by`
+fs.writeFileSync('./../log/log.txt',content,{flag:'a'},(err)=>{
+  console.log(err.message)
+})
+next()
+})
+
+//it's a query middle ware 
+movieSchema.pre('find',function(next){
+  this.find({releaseDate :{$lte:Date.now()}});
+  next();
+})
+movieSchema.pre('find',function(docs,next){
+  this.find({releaseDate :{$lte:Date.now()}});
+  
+  next();
+})
+
+
   //this will be created inside the mongoose 
   const Movie = mongoose.model(
     'Movie',movieSchema)

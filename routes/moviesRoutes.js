@@ -5,7 +5,9 @@ const  {
     postMovie,
     updateMovie,
     deleteMovie,
-    getHighestRated
+    getHighestRated,
+    getMoviesStats,
+    getMoviesbyGenre
 //     validateBody,
 // checkId
 }=require('../controllers/movies.controllers.js')
@@ -21,6 +23,9 @@ const router=express.Router()
 router.route('/highest-rated').get(getHighestRated)
 
 
+router.route('/movie-stats').get(getMoviesStats)
+
+router.route('/movies-by-genre').get(getMoviesbyGenre)
 
 router.route('/')
         .get(getallmovies)
